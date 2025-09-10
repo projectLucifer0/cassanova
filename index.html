@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Date Proposal</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden; /* No scrollbars */
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #ffdde1, #ee9ca7, #ffdde1);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      position: relative; /* keep absolute elements inside */
+    }
+    .glitter {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 3s infinite;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    @keyframes sparkle {
+      0% { transform: scale(0) translateY(0); opacity: 0; }
+      50% { transform: scale(1.5) translateY(-50px); opacity: 1; }
+      100% { transform: scale(0) translateY(-100px); opacity: 0; }
+    }
+    .float {
+      position: absolute;
+      font-size: 24px;
+      animation: floatUp 6s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-300px) scale(1.5); opacity: 0; }
+    }
+    .container {
+      z-index: 5;
+      text-align: center;
+      color: #fff;
+      max-width: 90%;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #fff;
+      text-shadow: 2px 2px 5px #ff69b4, 0 0 15px gold;
+    }
+    p {
+      font-size: 1.8em;
+      margin: 7px;
+      color: #fff;
+      text-shadow: 2px 2px 5px #ff69b4, 0 0 15px gold;
+    }
+    .btn {
+      margin: 10px;
+      padding: 12px 25px;
+      font-size: 1.2em;
+      background: #ff69b4;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      color: white;
+      box-shadow: 0 0 15px #ff69b4;
+      transition: transform 0.3s ease, background 0.3s ease;
+      position: relative;
+      z-index: 10;
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      background: gold;
+      box-shadow: 0 0 20px gold;
+    }
+    .burst {
+      position: absolute;
+      font-size: 25px;
+      animation: burstAnim 2s ease-out forwards;
+      pointer-events: none;
+    }
+    @keyframes burstAnim {
+      0% { transform: scale(0) translate(0,0); opacity: 1; }
+      100% { transform: scale(1.8) translate(var(--x), var(--y)); opacity: 0; }
+    }
+    .glass {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 80%;
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      text-align: center;
+      font-size: 1.5em;
+      color: white;
+      text-shadow: 0 0 20px #ff69b4, 0 0 30px gold;
+      animation: popIn 1s forwards;
+      z-index: 20;
+    }
+    @keyframes popIn {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      80% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hey 💖</h1>
+    <p>I was thinking… <br />My message goes here <br /> Second line <br /><br /> Movie Date ???🎬🍿<br /></p>
+    <button class="btn yes-btn" onclick="sayYes()">Yes 💕</button>
+    <button class="btn no-btn" onmouseover="runAway(this)" ontouchstart="runAway(this)">No 💔</button>
+  </div>
+  <script>
+    const icons = ["❤️","💖","💛","💘","🌸","🌹","🌼"];
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxAU-iW-fVziOHO5amI4X2RVW1s3jzsdYi4crvc4IXeshacUk_EX-I9ZDd02XJPWyOT5w/exec";
+    
+    // Glitter
+    for (let i = 0; i < 100; i++) {
+      let glitter = document.createElement("div");
+      glitter.className = "glitter";
+      glitter.style.left = Math.random() * window.innerWidth + "px";
+      glitter.style.top = Math.random() * window.innerHeight + "px";
+      glitter.style.animationDelay = Math.random() * 3 + "s";
+      document.body.appendChild(glitter);
+    }
+    
+    // Floating icons
+    setInterval(() => {
+      let el = document.createElement("div");
+      el.className = "float";
+      el.innerText = icons[Math.floor(Math.random() * icons.length)];
+      el.style.left = Math.random() * window.innerWidth + "px";
+      el.style.top = (window.innerHeight - 10) + "px"; // stay inside viewport
+      el.style.fontSize = (20 + Math.random() * 20) + "px";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6000);
+    }, 500);
+    
+    // Send response
+    function logResponse(choice) {
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({ response: choice }),
+        headers: { "Content-Type": "application/json" }
+      }).catch(err => console.error("Logging failed:", err));
+    }
+    
+    // Yes
+    function sayYes() {
+      logResponse("Yes");
+      for (let i = 0; i < 40; i++) {
+        let el = document.createElement("div");
+        el.className = "burst";
+        el.innerText = icons[Math.floor(Math.random() * icons.length)];
+        el.style.left = "50%";
+        el.style.top = "50%";
+        el.style.setProperty("--x", (Math.random() * 400 - 200) + "px");
+        el.style.setProperty("--y", (Math.random() * 400 - 200) + "px");
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2000);
+      }
+      let glass = document.createElement("div");
+      glass.className = "glass";
+      glass.innerText = "Yaayy! I Can't wait now... 💕🎬🍿🌸🌹🌼";
+      document.body.appendChild(glass);
+      setTimeout(() => glass.remove(), 3500);
+    }
+    
+    // No
+    function runAway(btn) {
+      logResponse("No (attempt)");
+      const padding = 20; 
+      const maxX = window.innerWidth - btn.offsetWidth - padding;
+      const maxY = window.innerHeight - btn.offsetHeight - padding;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      btn.style.position = "absolute";
+      btn.style.left = x + "px";
+      btn.style.top = y + "px";
+    }
+  </script>
+</body>
+</html>
